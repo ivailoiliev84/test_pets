@@ -36,7 +36,7 @@ class PetstagramLoginForm(BootstrapFormMixin, forms.Form):
         bot_catcher = self.cleaned_data['bot_catcher']
         if bot_catcher:
             raise forms.ValidationError('Bot detected')
-        return bot_catcher
+
 
     user = None
     username = forms.CharField(
