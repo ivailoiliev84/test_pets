@@ -27,7 +27,6 @@ class Pet(models.Model):
     age = models.IntegerField()
 
     description = models.TextField()
-    # image_url = models.URLField()
     image = models.ImageField(
         upload_to='pet_images',
         blank=True

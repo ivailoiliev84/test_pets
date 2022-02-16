@@ -11,22 +11,33 @@ UserModel = get_user_model()
 
 class PetstagramUserRegisterForm(BootstrapFormMixin, UserCreationForm):
     bot_catcher = forms.CharField(
-        max_length=30,
         widget=forms.HiddenInput(),
+        required=False,
     )
 
     def clean_bot_catcher(self):
-        bot = self.cleaned_data['bot_catcher']
-        if bot:
-            raise ValidationError('Bot detected')
+        bot_catcher = self.cleaned_data['bot_catcher']
+        if bot_catcher:
+            raise forms.ValidationError('Bot detected')
+
 
     class Meta:
         model = UserModel
         fields = ('username',)
 
 
-
 class PetstagramLoginForm(BootstrapFormMixin, forms.Form):
+    bot_catcher = forms.CharField(
+        widget=forms.HiddenInput(),
+        required=False,
+    )
+
+    def clean_bot_catcher(self):
+        bot_catcher = self.cleaned_data['bot_catcher']
+        if bot_catcher:
+            raise forms.ValidationError('Bot detected')
+        return bot_catcher
+
     user = None
     username = forms.CharField(
         max_length=30,

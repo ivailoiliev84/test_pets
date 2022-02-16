@@ -8,12 +8,13 @@ from petstagram.pets.models import Pet
 class CreatePetForm(BootstrapFormMixin, forms.ModelForm):
     bot_catcher = forms.CharField(
         widget=forms.HiddenInput(),
+        required=False,
     )
 
     def clean_bot_catcher(self):
-        bot = self.cleaned_data['bot_catcher']
-        if bot:
-            raise ValidationError('Bot detected')
+        bot_catcher = self.cleaned_data['bot_catcher']
+        if bot_catcher:
+            raise forms.ValidationError('Bot detected')
 
     class Meta:
         model = Pet
@@ -23,12 +24,13 @@ class CreatePetForm(BootstrapFormMixin, forms.ModelForm):
 class EditPetForm(CreatePetForm):
     bot_catcher = forms.CharField(
         widget=forms.HiddenInput(),
+        required=False,
     )
 
     def clean_bot_catcher(self):
-        bot = self.cleaned_data['bot_catcher']
-        if bot:
-            raise ValidationError('Bot detected')
+        bot_catcher = self.cleaned_data['bot_catcher']
+        if bot_catcher:
+            raise forms.ValidationError('Bot detected')
 
     class Meta:
         model = Pet
