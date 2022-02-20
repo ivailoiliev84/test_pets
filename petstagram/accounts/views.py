@@ -40,7 +40,7 @@ def signin_user(request):
     context = {
         'form': form
     }
-    return render(request, 'registration/../../templates/accounts/login.html', context)
+    return render(request, 'accounts/login.html', context)
 
 
 def signout_user(request):
