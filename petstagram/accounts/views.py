@@ -6,7 +6,8 @@ from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views.generic import FormView
 
-from petstagram.accounts.forms import PetstagramUserRegisterForm, PetstagramLoginForm, ProfileForm
+from petstagram.accounts.forms import PetstagramUserRegisterForm, PetstagramLoginForm, ProfileCreateForm, \
+    ProfileUpdateForm
 from petstagram.accounts.models import Profile
 from petstagram.pets.models import Pet
 
@@ -64,25 +65,65 @@ def signout_user(request):
 
 
 @login_required
-def profile_user(request):
+def profile_details(request):
     profile = Profile.objects.get(pk=request.user.id)
+    pets = Pet.objects.all()
+
+    profile_pets = Pet.objects.filter(user_id=request.user.id).count()
+
+    # pet_photo_like = sum(pp.like for pp in PetPhoto.objects.filter(tagged_pet__user_profile=profile).distinct())
+
+    context = {
+        'profile': profile,
+        'profile_pets': profile_pets,
+        # 'pet_photo_like': pet_photo_like,
+        'pets': pets,
+
+    }
+    return render(request, 'profile_templates/profile_details.html', context)
+
+
+def create_profile(request):
+    user_profile = Profile.objects.get(pk=request.user.id)
     if request.method == "POST":
-        form = ProfileForm(request.POST, request.FILES, instance=profile)
+        form = ProfileCreateForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
+            return redirect('home')
 
+    else:
+        form = ProfileCreateForm()
+
+    context = {
+        'form': form,
+        'user_profile': user_profile,
+    }
+
+    return render(request, 'profile_templates/profile_create.html', context)
+
+
+def edit_profile(request):
+    profile = Profile.objects.get(pk=request.user.id)
+    if request.method == "POST":
+        form = ProfileUpdateForm(request.POST, request.FILES, instance=profile)
+        if form.is_valid():
+            form.save()
             return redirect('profile user')
 
     else:
+        form = ProfileUpdateForm(instance=profile)
 
-        form = ProfileForm(instance=profile)
-
-    pets = Pet.objects.filter(user_id=request.user.id)
     context = {
         'form': form,
-        'pets': pets,
-        'profile': profile,
 
     }
+    return render(request, 'profile_templates/profile_edit.html', context)
 
-    return render(request, 'accounts/user_profile.html', context)
+
+def delete_profile(request):
+    profile = Profile.objects.get(pk=request.user.id)
+    if request.method == 'POST':
+        profile.delete()
+        return redirect('home')
+    else:
+        return render(request, 'profile_templates/profile_delete.html')

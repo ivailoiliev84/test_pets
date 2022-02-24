@@ -20,7 +20,6 @@ class PetstagramUserRegisterForm(BootstrapFormMixin, UserCreationForm):
         if bot_catcher:
             raise forms.ValidationError('Bot detected')
 
-
     class Meta:
         model = UserModel
         fields = ('username',)
@@ -36,7 +35,6 @@ class PetstagramLoginForm(BootstrapFormMixin, forms.Form):
         bot_catcher = self.cleaned_data['bot_catcher']
         if bot_catcher:
             raise forms.ValidationError('Bot detected')
-
 
     user = None
     username = forms.CharField(
@@ -61,10 +59,25 @@ class PetstagramLoginForm(BootstrapFormMixin, forms.Form):
         return self.user
 
 
-class ProfileForm(BootstrapFormMixin, forms.ModelForm):
+class ProfileCreateForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = ('first_name', 'last_name', 'profile_picture',)
+
+        widgets = {
+            'first_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter first name'}),
+            'last_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter last name'}),
+            'profile_picture': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter URL'}),
+
+        }
+
+
+class ProfileUpdateForm(BootstrapFormMixin, forms.ModelForm):
     class Meta:
         model = Profile
         exclude = ('user',)
+
         widgets = {
-            'profile_picture': forms.FileInput(),
+            'email': forms.TextInput(attrs={'placeholder': 'Enter email'}),
+            'description': forms.Textarea(attrs={'placeholder': 'Enter descriptions', 'row': 3})
         }

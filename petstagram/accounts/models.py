@@ -1,9 +1,10 @@
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
 from django.contrib.auth.models import User, PermissionsMixin
+from django.core.validators import MinLengthValidator
 from django.db import models
 
-
 # Create your models here.
+from .validators import validator_only_letters
 
 
 class PetstagramUserManager(BaseUserManager):
@@ -57,16 +58,77 @@ class PetstagramUser(AbstractBaseUser, PermissionsMixin):
 
 
 class Profile(models.Model):
+    FIRST_NAME_MAX_LENGTH = 30
+    FIRST_NAME_MIN_LENGTH = 2
+
+    LAST_NAME_MAX_LENGTH = 30
+    LAST_NAME_MIN_LENGTH = 2
+
+    MALE = 'Male'
+    FEMALE = 'Female'
+    DO_NOT_SHOW = 'Do not show'
+    GENDER = [(x, x) for x in (MALE, FEMALE, DO_NOT_SHOW)]
+
+    first_name = models.CharField(
+        max_length=FIRST_NAME_MAX_LENGTH,
+        validators=(
+            MinLengthValidator(FIRST_NAME_MIN_LENGTH),
+            validator_only_letters,
+        )
+
+    )
+
+    last_name = models.CharField(
+        max_length=30,
+        validators=(
+            MinLengthValidator(LAST_NAME_MIN_LENGTH),
+            validator_only_letters,
+        )
+    )
+
     profile_picture = models.ImageField(
         upload_to='profile_pictures',
+        blank=True
+
+    )
+
+    date_of_birth = models.DateField(
+        null=True,
+        blank=True,
+        validators=(
+
+        )
+    )
+
+    description = models.TextField(
+        null=True,
         blank=True,
     )
 
+    email = models.EmailField(
+        null=True,
+        blank=True,
+    )
+
+    # GENDER_CHOICE = (
+    #     ("Male", "Male"),
+    #     ("Female", "Female"),
+    #     ("Do not show", "Do not show"),
+    # )
+    gender = models.CharField(
+        max_length=max(len(x) for (x, _) in GENDER),
+        choices=GENDER,
+        null=True,
+        blank=True,
+    )
     user = models.OneToOneField(
         PetstagramUser,
         on_delete=models.CASCADE,
         primary_key=True,
     )
+
+    def __str__(self):
+        return f'{self.first_name} {self.last_name}'
 
 
 from .signals import *
