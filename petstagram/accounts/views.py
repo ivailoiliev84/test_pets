@@ -67,7 +67,7 @@ def signout_user(request):
 @login_required
 def profile_details(request):
     profile = Profile.objects.get(pk=request.user.id)
-    pets = Pet.objects.all()
+    pets = Pet.objects.filter(user_id=request.user.id)
 
     profile_pets = Pet.objects.filter(user_id=request.user.id).count()
 
