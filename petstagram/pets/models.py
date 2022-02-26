@@ -29,7 +29,8 @@ class Pet(models.Model):
     description = models.TextField()
     image = models.ImageField(
         upload_to='pet_images',
-        blank=True
+        blank=True,
+        null=True,
 
     )
     user = models.ForeignKey(
