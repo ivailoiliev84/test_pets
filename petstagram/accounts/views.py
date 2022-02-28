@@ -1,10 +1,10 @@
-from django.contrib.auth import logout, authenticate, login
+from django.contrib.auth import logout, authenticate, login, get_user_model
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 
 # Create your views here.
 from django.urls import reverse_lazy
-from django.views.generic import FormView
+from django.views.generic import FormView, CreateView
 
 from petstagram.accounts.forms import PetstagramUserRegisterForm, PetstagramLoginForm, ProfileCreateForm, \
     ProfileUpdateForm
@@ -12,20 +12,32 @@ from petstagram.accounts.models import Profile
 from petstagram.pets.models import Pet
 
 
-def signup_user(request):
-    if request.method == 'POST':
-        form = PetstagramUserRegisterForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('sign in')
+class RegisterView(CreateView):
+    form_class = PetstagramUserRegisterForm
+    template_name = 'accounts/signup.html'
+    success_url = reverse_lazy('pet list')
 
-    else:
-        form = PetstagramUserRegisterForm()
-    context = {
-        'form': form
-    }
+    def form_valid(self, form):
+        result = super().form_valid(form)
+        login(self.request, self.object)
+        return result
 
-    return render(request, 'accounts/signup.html', context)
+
+# def signup_user(request):
+#     if request.method == 'POST':
+#         form = PetstagramUserRegisterForm(request.POST)
+#         if form.is_valid():
+#             form.save()
+#
+#             return redirect('sign in')
+#
+#     else:
+#         form = PetstagramUserRegisterForm()
+#     context = {
+#         'form': form
+#     }
+#
+#     return render(request, 'accounts/signup.html', context)
 
 
 def signin_user(request):
