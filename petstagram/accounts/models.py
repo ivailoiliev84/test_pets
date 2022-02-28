@@ -88,7 +88,8 @@ class Profile(models.Model):
 
     profile_picture = models.ImageField(
         upload_to='profile_pictures',
-        blank=True
+        blank=True,
+
 
     )
 

@@ -121,9 +121,11 @@ def edit_profile(request):
 
 
 def delete_profile(request):
+    user = request.user
     profile = Profile.objects.get(pk=request.user.id)
     if request.method == 'POST':
         profile.delete()
-        return redirect('home')
+        user.delete()
+        return redirect('landing')
     else:
         return render(request, 'profile_templates/profile_delete.html')

@@ -9,7 +9,7 @@
             <div class="m-auto d-flex justify-content-center">
                 <div class="m-2">
                     <form method="post" action="{% url 'delete profile' %}">
-
+                        {% csrf_token %}
                         <!-- For for Deleting a Profile -->
 
                         <input type="submit" value="Confirm" class="btn btn-danger"/>
