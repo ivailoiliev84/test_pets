@@ -12,7 +12,7 @@
                     {% if profile.profile_picture %}
                         <img src="{{ profile.profile_picture.url }}"
                              class="w-50 rounded mx-auto d-block" alt="">
-                        {% else %}
+                    {% else %}
 
                         <img src="{% static 'images/empty_profile.jpeg' %}"
                              class="w-50 rounded mx-auto d-block" alt="{% static 'images/empty_profile.jpeg' %}">
@@ -39,7 +39,7 @@
                         {% endif %}
                     </div>
                     <p class="mt-2">Total Images: {{ profile_pets }}</p>
-{#                    <p class="mt-2">Total Likes: {{ pet_photo_like }}</p>#}
+                    {#                    <p class="mt-2">Total Likes: {{ pet_photo_like }}</p>#}
                     <a href="{% url 'edit profile' %}" class="btn btn-primary">Edit</a>
                     <a href="{% url 'delete profile' %}" class="btn btn-danger">Delete</a>
                 </div>
