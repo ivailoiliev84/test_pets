@@ -2,7 +2,7 @@ from django.urls import path
 
 from petstagram.accounts.signals import create_profile
 from petstagram.accounts.views import signin_user, signout_user, profile_details, edit_profile, \
-    delete_profile, RegisterView
+    delete_profile, RegisterView, ProfilePetsList
 
 urlpatterns = (
     path('sign-up/', RegisterView.as_view(), name='sign up'),
@@ -14,5 +14,6 @@ urlpatterns = (
     path('profile/create/', create_profile, name='create profile'),
     path('profile/edit/', edit_profile, name='edit profile'),
     path('profile/delete/', delete_profile, name='delete profile'),
+    path('profile/pets/', ProfilePetsList.as_view(), name='profile pets')
 
 )
