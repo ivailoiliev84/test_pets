@@ -1,10 +1,12 @@
+import profile
+
 from django.contrib.auth import logout, authenticate, login, get_user_model
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 
 # Create your views here.
 from django.urls import reverse_lazy
-from django.views.generic import FormView, CreateView
+from django.views.generic import FormView, CreateView, ListView, DetailView
 
 from petstagram.accounts.forms import PetstagramUserRegisterForm, PetstagramLoginForm, ProfileCreateForm, \
     ProfileUpdateForm
@@ -27,9 +29,10 @@ class RegisterView(CreateView):
 #     if request.method == 'POST':
 #         form = PetstagramUserRegisterForm(request.POST)
 #         if form.is_valid():
-#             form.save()
+#             user = form.save()
+#             login(request, user)
 #
-#             return redirect('sign in')
+#             return redirect('pet list')
 #
 #     else:
 #         form = PetstagramUserRegisterForm()
@@ -76,6 +79,19 @@ def signout_user(request):
 #         return context
 
 
+class ProfilePetsList(ListView):
+    template_name = 'profile_templates/profile_pets.html'
+    model = Profile
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data()
+        pets = Pet.objects.filter(user_id=self.request.user.id)
+        context['profile'] = Profile.objects.get(pk=self.request.user.id)
+        context['pets'] = pets
+        context['total_pets'] = len(pets)
+        return context
+
+
 @login_required
 def profile_details(request):
     profile = Profile.objects.get(pk=request.user.id)
@@ -94,6 +110,11 @@ def profile_details(request):
     }
     return render(request, 'profile_templates/profile_details.html', context)
 
+
+# class CreateProfile(CreateView):
+#     model = Profile
+#     template_name = 'profile_templates/profile_create.html'
+#     success_url = reverse_lazy('')
 
 def create_profile(request):
     user_profile = Profile.objects.get(pk=request.user.id)
