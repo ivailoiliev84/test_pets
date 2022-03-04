@@ -1,8 +1,12 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, redirect
 
 # Create your views here.
+from django.urls import reverse_lazy
+from django.views.generic import ListView, CreateView
+
 from petstagram.common.forms import CommentForm
 from petstagram.common.models import Comment
 from petstagram.pets.forms import CreatePetForm, EditPetForm
@@ -11,13 +15,22 @@ from petstagram.pets.models import Pet, Like
 UserModel = get_user_model()
 
 
-def pet_all(request):
-    pets = Pet.objects.all()
+# def pet_all(request):
+#     pets = Pet.objects.all()
+#
+#     context = {
+#         'pets': pets
+#     }
+#     return render(request, 'pets/pet_list.html', context)
 
-    context = {
-        'pets': pets
-    }
-    return render(request, 'pets/pet_list.html', context)
+class PetList(ListView):
+    template_name = 'pets/pet_list.html'
+    model = Pet
+    context_object_name = 'pets'
+
+
+
+    
 
 
 def pet_details(request, pk):
@@ -91,6 +104,9 @@ def create_pet(request):
     }
 
     return render(request, 'pets/pet_create.html', context)
+
+
+
 
 
 @login_required
