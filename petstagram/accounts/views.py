@@ -81,6 +81,7 @@ def signout_user(request):
 class ProfilePetsList(LoginRequiredMixin, ListView):
     template_name = 'profile_templates/profile_pets.html'
     model = Profile
+    context_object_name = 'pets'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data()
@@ -148,34 +149,6 @@ def create_profile(request):
     }
 
     return render(request, 'profile_templates/profile_create.html', context)
-
-
-# class ProfileEditView(LoginRequiredMixin, FormView):
-#     form_class = ProfileUpdateForm
-#     template_name = 'profile_templates/profile_edit.html'
-#     success_url = reverse_lazy('profile')
-#     object = None
-
-    # def get(self, request, *args, **kwargs):
-    #     self.object = Profile.objects.get(pk=self.request.user.id)
-    #     return super().get(request, *args, **kwargs)
-    #
-    # def post(self, request, *args, **kwargs):
-    #     self.object = Profile.objects.get(pk=self.request.user.id)
-    #     return super().get(request, *args, **kwargs)
-
-    # def form_valid(self, form):
-    #     self.object.profile_picture = form.cleaned_data['profile_picture']
-    #     self.object.save()
-    #     return super().form_valid(form)
-
-    # def get_context_data(self, **kwargs):
-    #     context = super().get_context_data(**kwargs)
-    #     context['profile'] = self.object
-    #     context['form'] = ProfileUpdateForm(instance=self.object)
-    #
-    #     return context
-
 
 
 def edit_profile(request):
