@@ -11,12 +11,12 @@
                 <div class="d-inline p-2 w-50">
                     {% if profile.profile_picture %}
                         <img src="{{ profile.profile_picture.url }}"
-                             class="w-50 rounded mx-auto d-block" alt="">
+                             class="w-50 rounded mx-auto d-block" alt="{% static 'empty_profile_image/empty_profile.jpeg' %}">
                     {% else %}
 
                         <img src="{% static 'empty_profile_image/empty_profile.jpeg' %}"
                              class="w-50 rounded mx-auto d-block"
-                             alt="">
+                             alt="{% static 'empty_profile_image/empty_profile.jpeg' %}">
                     {% endif %}
                 </div>
                 <div class="d-inline p-2 w-50">
